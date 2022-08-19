@@ -28,7 +28,7 @@ getSourceReq = requests.get("https://www.twitter.com/?prefetchTimestamp=", heade
 getMainJsFileKeyDetails = re.findall("https://abs.twimg.com/responsive-web/client-web/main.(.*)8.js",getSourceReq)
 
 # Regex to find and isolate list of source file name and cleaning it from the recieved string format into python acceptable dictionary format
-firstRegex = re.findall("t.u=e=>e+(.*)8.js",getSourceReq)
+firstRegex = re.findall(".u=e=>e+(.*)8.js",getSourceReq)
 regexAgain = re.findall("{(.*)}",firstRegex[0])
 acceptable = regexAgain[0].replace(":", ",").replace('"', "")
 listRes = list(acceptable.split(","))
@@ -68,4 +68,4 @@ with open("twitter_graphql_endpoints_"+date_today+".txt", "w") as outfile:
     outfile.write("\n".join(str(item) for item in graphqllistwithfileName))
 
 print("\n#########################################################\n\nOutput File :"+ " twitter_graphql_endpoints_"+date_today+".txt")
-print("\n\n#########################################################\n")
+print("\n#########################################################\n")
