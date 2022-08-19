@@ -50,6 +50,7 @@ for key,value in res_dct.items():
     # print(sourcecodeUrl)
 
     # Checking for status-codes, incase of wrong source file location 404 or rate-limiting
+    r = requests.get(sourcecodeUrl, allow_redirects=False)
     if(r.status_code != 200):
         print("\n$$$Error while fetching file: ",key+"\n")
         graphqllistwithfileName.append(key+"Error: File Not Found!")
