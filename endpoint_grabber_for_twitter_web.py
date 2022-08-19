@@ -28,7 +28,9 @@ getSourceReq = requests.get("https://www.twitter.com/?prefetchTimestamp=", heade
 getMainJsFileKeyDetails = re.findall("https://abs.twimg.com/responsive-web/client-web/main.(.*)8.js",getSourceReq)
 
 # Regex to find and isolate list of source file name and cleaning it from the recieved string format into python acceptable dictionary format
+# TODO: Handle error
 firstRegex = re.findall(".u=e=>e+(.*)8.js",getSourceReq)
+# TODO: Handle error
 regexAgain = re.findall("{(.*)}",firstRegex[0])
 acceptable = regexAgain[0].replace(":", ",").replace('"', "")
 listRes = list(acceptable.split(","))
@@ -47,12 +49,15 @@ for key,value in res_dct.items():
     sourcecodeUrl = baseUrl + key+"."+value+"8"+".js"
     # print(sourcecodeUrl)
 
-    #TODO :Currently not checking for status-codes, could lead to data not being fetched due to 404 or rate-limiting
-    r = requests.get(sourcecodeUrl, allow_redirects=False).text
+    # Checking for status-codes, incase of wrong source file location 404 or rate-limiting
+    if(r.status_code != 200):
+        print("\n$$$Error while fetching file: ",key+"\n")
+        graphqllistwithfileName.append(key+"Error: File Not Found!")
+    
+    resp = r.text
     # print(r)
-    output = re.findall('params:(.*?)operationKind:', r)
-    output_1 = re.findall('e.exports={(.*?)operationType:', r)
-    # print(output)
+    output = re.findall('params:(.*?)operationKind:', resp)
+    output_1 = re.findall('e.exports={(.*?)operationType:', resp)
 
     # if output != [] or output_1 != []:
     graphqllistwithfileName.append(key)
